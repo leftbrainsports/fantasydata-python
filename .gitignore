@@ -1,2 +1,6 @@
+__pycache__
 *~
-*.pyc
+*.py[cod]
+*.egg-info
+.env
+api_key.txt

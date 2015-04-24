@@ -1,5 +1,9 @@
-import httplib, urllib, base64
+#coding:utf-8
+# import base64
 import json
+import httplib
+import urllib
+
 
 class FantasyDataError(Exception):
     def __init__(self, errorstr):
@@ -7,125 +11,133 @@ class FantasyDataError(Exception):
     def __str__(self):
         return repr(self.errorstr)
 
-class FantasyData :
-    
+
+class FantasyData(object):
+    """
+    Class provide Fantasy Data API calls 
+    """
+    _api_address = "api.nfldata.apiphany.com"  # API hostname
+    _api_key = None  # api key for requests
+    _get_params = None  # request GET params with API key
+    _headers = None  # request additional headers
+    _response_format = "json"  # default response format
+
     def __init__(self, api_key):
-        self.api_key = api_key
-        self.params = urllib.urlencode({'subscription-key': api_key,})
-        self.headers = {
+        """
+        Object contructor. Set key for API requests
+        """
+        self._api_key = api_key
+        self._get_params = urllib.urlencode({'subscription-key': api_key})
+        self._headers = {
                         # Basic Authorization Sample 
                         # 'Authorization': 'Basic %s' % base64.encodestring('{username}:{password}'),
                         }
-        self.api_address = 'api.nfldata.apiphany.com'
     
-    def raise_api_is_unavailable_exception(self):
-        raise FantasyDataError('Error: Cannot connect to the FantasyData API')
-    
-    def raise_exception_if_error(self, result):
-        if (type(result) is dict):
-            if result.has_key('statusCode'):
+    def get_upcoming_season(self):
+        """
+        Year of the current NFL season, if we are in the mid-season.
+        If we are in the off-season, then year of the next upcoming season.
+        This value changes immediately after the Super Bowl.
+        The earliest season for Fantasy data is 2001. The earliest season for Team data is 1985.
+        """
+        result = self._method_call("UpcomingSeason")
+        return int(result)
+
+    def get_schedules_for_season(self, season, season_type="REG"):
+        """
+        Game schedule for a specified season.
+        """
+        try:
+            season = int(season)
+            if season_type not in ["REG", "PRE", "POST"]:
+                raise ValueError
+        except (ValueError, TypeError):
+            raise FantasyDataError('Error: Invalid method parameters')
+
+        season_param = "{0}{1}".format(season, season_type)
+        result = self._method_call("Schedules/{season}", season=season_param)
+        return result
+
+    def get_free_agents(self):
+        """
+        """
+        result = self._method_call("FreeAgents")
+        return result
+
+    def get_current_week(self):
+        """
+        Number of the current week of the NFL season.
+        This value usually changes on Tuesday nights or Wednesday mornings at midnight EST.
+        Week number is an integer between 1 and 21 or the word current.
+        Weeks 1 through 17 are regular season weeks. Weeks 18 through 21 are post-season weeks.
+        """
+        result = self._method_call("CurrentWeek")
+        return int(result)
+
+    def get_team_roster_and_depth_charts(self, team_name):
+        """
+        `team_name` str Team short name
+        """
+        result = self._method_call("Players/{team}", team=team_name)
+        return result
+
+    def get_players_game_stats_for_season_for_week(self, season, week, season_type="REG"):
+        """
+        Game stats for a specified season and week.
+        `season` int
+        `week` int
+        `season_type` str Valid value one of ("REG", "PRE", "POST")
+        """
+        try:
+            season = int(season)
+            week = int(week)
+            if season_type not in ["REG", "PRE", "POST"]:
+                raise ValueError
+        except (TypeError, ValueError):
+            raise FantasyDataError('Error: Invalid method parameters')
+
+        season_param = "{0}{1}".format(season, season_type)
+        result = self._method_call("GameStatsByWeek/{season}/{week}", season=season_param, week=week)
+        return result
+
+    def _method_call(self, method, **kwargs):
+        """
+        Call API method. Generate request. Parse response. Process errors
+        `method` str API method url for request. Contains parameters
+        `params` dict parameters for method url
+        """
+        try:
+            connection = httplib.HTTPConnection(self._api_address)
+        except:
+            raise FantasyDataError('Error: Cannot connect to the FantasyData API')
+
+        try:
+            method = method.format(format=self._response_format, **kwargs)
+            request_url = "/standard/{format}/{method}?{get_params}".format(format=self._response_format, method=method,
+                                                                            get_params=self._get_params)
+            connection.request("GET", request_url, "", self._headers)
+            response = connection.getresponse()
+
+            result = json.loads(response.read())
+
+            if isinstance(result, dict) and "statusCode" in result:
                 if (result['statusCode']) == 401:
                     raise FantasyDataError('Error: Invalid API key')
                 else:
-                    raise FantasyDataError('Error: Failed to get upcoming season')
-    
-    def get_upcoming_season(self):
-        connection = None
-        try:
-            connection = httplib.HTTPConnection(self.api_address)
-        except:
-            self.raise_api_is_unavailable_exception()
-        try:
-            connection.request("GET", "/standard/{json}/UpcomingSeason?%s" % self.params, "", self.headers)
-            response = connection.getresponse() 
-            result = json.loads(response.read())
-            self.raise_exception_if_error(result)
-            return int(result)
-        finally:
-            connection.close()
-    
-    def get_schedules_for_season(self, season):
-        connection = None
-        try:
-            connection = httplib.HTTPConnection(self.api_address)
-        except:
-            self.raise_api_is_unavailable_exception()
-        try:
-            connection.request("GET", "/standard/{json}/Schedules/{" + str(season) + "}?%s" % self.params, "", self.headers)
-            response = connection.getresponse()
-            result = json.loads(response.read())
-            self.raise_exception_if_error(result)
+                    raise FantasyDataError('Error: Failed to get response')
+
             return result
-        finally:
-            connection.close()
-    
-    def get_team_roster_and_depth_charts(self, team):
-        connection = None
-        try:
-            connection = httplib.HTTPConnection(self.api_address)
-        except:
-            self.raise_api_is_unavailable_exception()
-        try:
-            connection.request("GET", "/standard/{json}/Players/" + str(team) + "?%s" % self.params, "", self.headers)
-            response = connection.getresponse()
-            result = json.loads(response.read())
-            self.raise_exception_if_error(result)
-            return result
-        finally:
-            connection.close()
-    
-    def get_free_agents(self):
-        connection = None
-        try:
-            connection = httplib.HTTPConnection(self.api_address)
-        except:
-            self.raise_api_is_unavailable_exception()
-        try:
-            connection.request("GET", "/standard/{json}/FreeAgents?%s" % self.params, "", self.headers)
-            response = connection.getresponse()
-            result = json.loads(response.read())
-            self.raise_exception_if_error(result)
-            return result
-        finally:
-            connection.close()
-    
-    def get_current_week(self):
-        connection = None
-        try:
-            connection = httplib.HTTPConnection(self.api_address)
-        except:
-            self.raise_api_is_unavailable_exception()
-        try:
-            connection.request("GET", "/standard/{json}/CurrentWeek?%s" % self.params, "", self.headers)
-            response = connection.getresponse()
-            result = json.loads(response.read())
-            self.raise_exception_if_error(result)
-            return result
-        finally:
-            connection.close()
-        
-    def get_players_game_stats_for_season_for_week(self, season, week):
-        connection = None
-        try:
-            connection = httplib.HTTPConnection(self.api_address)
-        except:
-            self.raise_api_is_unavailable_exception()
-        try:
-            connection.request("GET", "/standard/{format}/PlayerGameStatsByWeek/{2013REG}/{1}?%s" % self.params, "", self.headers)
-            response = connection.getresponse()
-            a = response.read();
-            print a;
-            result = json.loads(response.read())
-            self.raise_exception_if_error(result)
-            return result
+        # except:
+        #     pass
         finally:
             connection.close()
 
-api_key = '19944f3e54d84a5a93918aa35bbe5abf'
-fantasy_data = FantasyData(api_key)
-#print fantasy_data.get_upcoming_season()
-#print fantasy_data.get_schedules_for_season(2014)
-#print fantasy_data.get_team_roster_and_depth_charts('WAS')
-#print fantasy_data.get_free_agents()
-#print fantasy_data.get_current_week()
-#print fantasy_data.get_players_game_stats_for_season_for_week('2013REG', '1')
+
+# api_key = '19944f3e54d84a5a93918aa35bbe5abf'
+# fantasy_data = FantasyData(api_key)
+# print fantasy_data.get_upcoming_season()
+# print fantasy_data.get_schedules_for_season(2014)
+# print fantasy_data.get_free_agents()
+# print fantasy_data.get_current_week()
+# print fantasy_data.get_team_roster_and_depth_charts('WAS')
+# print fantasy_data.get_players_game_stats_for_season_for_week(2013, 1, "REG")
