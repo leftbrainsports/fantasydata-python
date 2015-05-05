@@ -97,7 +97,7 @@ class FantasyData(object):
             raise FantasyDataError('Error: Invalid method parameters')
 
         season_param = "{0}{1}".format(season, season_type)
-        result = self._method_call("GameStatsByWeek/{season}/{week}", season=season_param, week=week)
+        result = self._method_call("PlayerGameStatsByWeek/{season}/{week}", season=season_param, week=week)
         return result
 
     def _method_call(self, method, **kwargs):
