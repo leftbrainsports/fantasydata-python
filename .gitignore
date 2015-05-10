@@ -3,4 +3,3 @@ __pycache__
 *.py[cod]
 *.egg-info
 .env
-api_key.txt
