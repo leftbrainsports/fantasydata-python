@@ -1,5 +1,6 @@
 #coding:utf-8
 import re
+import os
 
 import pytest
 
@@ -10,9 +11,7 @@ from fantasy_data.FantasyData import FantasyData, FantasyDataError
 def api_key():
     """
     """
-    with open("api_key.txt", "r") as api_key_file:
-        return api_key_file.read().replace('\n', '')
-
+    return os.environ.get('FANTASYDATA_API_KEY')
 
 @pytest.fixture(scope="module")
 def season():
