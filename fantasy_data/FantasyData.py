@@ -1,5 +1,4 @@
 #coding:utf-8
-# import base64
 import json
 import httplib
 import urllib
@@ -127,17 +126,6 @@ class FantasyData(object):
                     raise FantasyDataError('Error: Failed to get response')
 
             return result
-        # except:
-        #     pass
         finally:
             connection.close()
 
-
-# api_key = '19944f3e54d84a5a93918aa35bbe5abf'
-# fantasy_data = FantasyData(api_key)
-# print fantasy_data.get_upcoming_season()
-# print fantasy_data.get_schedules_for_season(2014)
-# print fantasy_data.get_free_agents()
-# print fantasy_data.get_current_week()
-# print fantasy_data.get_team_roster_and_depth_charts('WAS')
-# print fantasy_data.get_players_game_stats_for_season_for_week(2013, 1, "REG")
