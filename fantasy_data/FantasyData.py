@@ -15,6 +15,7 @@ class FantasyData(object):
     """
     Class provide Fantasy Data API calls
     """
+    _api_schema = "http://"
     _api_address = "api.nfldata.apiphany.com"  # API hostname
     _api_key = None  # api key for requests
     _get_params = None  # request GET params with API key
@@ -26,7 +27,7 @@ class FantasyData(object):
         Object contructor. Set key for API requests
         """
         self._api_key = api_key
-        # useses six
+        # uses six
         self._get_params = urllib.parse.urlencode({'subscription-key': api_key})
 
         self._headers = {
@@ -123,7 +124,7 @@ class FantasyData(object):
         method = method.format(format=self._response_format, **kwargs)
         request_url = "/standard/{format}/{method}?{get_params}".format(format=self._response_format, method=method,
                                                                         get_params=self._get_params)
-        response = session.get("http://" + self._api_address + request_url,
+        response = session.get(self._api_schema + self._api_address + request_url,
                                headers=self._headers)
         result = response.json()
 
