@@ -100,6 +100,13 @@ class FantasyData(object):
         result = self._method_call("PlayerGameStatsByWeek/{season}/{week}", season=season_param, week=week)
         return result
 
+    def get_teams_active(self):
+        """
+        Gets all active teams.
+        """
+        result = self._method_call("Teams")
+        return result
+
     def _method_call(self, method, **kwargs):
         """
         Call API method. Generate request. Parse response. Process errors

@@ -241,6 +241,17 @@ class TestFantasyData:
             assert isinstance(item["Team"], unicode), "unexpected type of key 'Team'"
             assert item["Weight"] is None or isinstance(item["Weight"], (int, unicode)), "unexpected type of key 'Weight'"  # why str - don`t know
 
+    def test_get_teams_active(self, api_key):
+        """
+        API call get_current_week
+        """
+        response = FantasyData(api_key).get_teams_active()
+
+        assert isinstance(response, list), "response not list"
+        assert len(response), "response empty list"
+
+        assert isinstance(response[0]["City"], unicode), "unexpected type of key 'City'"
+
     def _check_date(self, value, error_msg):
         """
         Check date value. Parse timestamp or throw assert exception
