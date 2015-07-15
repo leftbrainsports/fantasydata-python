@@ -1,7 +1,6 @@
 #coding:utf-8
 import os
 import re
-import os
 
 import pytest
 
@@ -13,6 +12,7 @@ def api_key():
     """
     """
     return os.environ.get('FANTASYDATA_API_KEY')
+
 
 @pytest.fixture(scope="module")
 def season():
@@ -56,7 +56,7 @@ class TestFantasyData:
             It throws an exception stating "Error: Cannot connect to the FantasyData API"
         """
         invalid_api_key = 'invalid api key'
-        with pytest.raises(FantasyDataError): 
+        with pytest.raises(FantasyDataError):
             FantasyData(invalid_api_key).get_upcoming_season()
 
     def test_get_upcoming_season_invalid_api_key(self):
@@ -72,7 +72,7 @@ class TestFantasyData:
             It throws an exception stating "Error: Invalid API key"
         """
         invalid_api_key = 'invalid api key'
-        with pytest.raises(FantasyDataError): 
+        with pytest.raises(FantasyDataError):
             FantasyData(invalid_api_key).get_upcoming_season()
 
     def test_get_upcoming_season(self, api_key):
@@ -123,11 +123,11 @@ class TestFantasyData:
         assert len(response), "response empty list"
 
         # item = response[0]
-        required_fields = {"Active", "Age", "AverageDraftPosition", "BirthDate", "BirthDateString", "ByeWeek", 
-                           "College", "DepthDisplayOrder", "DepthOrder", "DepthPosition", "DepthPositionCategory", 
-                           "Experience", "ExperienceString", "FantasyPosition", "FirstName", "Height", "InjuryStatus", 
-                           "LastName", "LatestNews", "Name", "Number", "PhotoUrl", "PlayerID", "Position", 
-                           "PositionCategory", "ShortName", "Status", "Team", "UpcomingGameOpponent", 
+        required_fields = {"Active", "Age", "AverageDraftPosition", "BirthDate", "BirthDateString", "ByeWeek",
+                           "College", "DepthDisplayOrder", "DepthOrder", "DepthPosition", "DepthPositionCategory",
+                           "Experience", "ExperienceString", "FantasyPosition", "FirstName", "Height", "InjuryStatus",
+                           "LastName", "LatestNews", "Name", "Number", "PhotoUrl", "PlayerID", "Position",
+                           "PositionCategory", "ShortName", "Status", "Team", "UpcomingGameOpponent",
                            "UpcomingGameWeek", "Weight", "PlayerSeason"}
         for item in response:
             item_keys = set(map(str, item.keys()))
@@ -171,8 +171,8 @@ class TestFantasyData:
         assert len(response), "response empty list"
 
         # item = response[0]
-        required_fields = {"Started", "Week", "Stadium", "ShortName", "Name", "HomeOrAway", "PlayerGameID", "GameDate", 
-                           "Played", "IsGameOver", "GameKey", "Position", "PlayerID", "Opponent", "Team", "SeasonType", 
+        required_fields = {"Started", "Week", "Stadium", "ShortName", "Name", "HomeOrAway", "PlayerGameID", "GameDate",
+                           "Played", "IsGameOver", "GameKey", "Position", "PlayerID", "Opponent", "Team", "SeasonType",
                            "Season", "ScoringDetails"}
         for item in response:
             item_keys = set(map(str, item.keys()))
@@ -208,11 +208,11 @@ class TestFantasyData:
         assert len(response), "response empty list"
 
         # item = response[0]
-        required_fields = {"Active", "Age", "AverageDraftPosition", "BirthDate", "BirthDateString", "ByeWeek", 
-                           "College", "DepthDisplayOrder", "DepthOrder", "DepthPosition", "DepthPositionCategory", 
-                           "Experience", "ExperienceString", "FantasyPosition", "FirstName", "Height", "InjuryStatus", 
-                           "LastName", "LatestNews", "Name", "Number", "PhotoUrl", "PlayerID", "PlayerSeason", 
-                           "Position", "PositionCategory", "ShortName", "Status", "Team", "UpcomingGameOpponent", 
+        required_fields = {"Active", "Age", "AverageDraftPosition", "BirthDate", "BirthDateString", "ByeWeek",
+                           "College", "DepthDisplayOrder", "DepthOrder", "DepthPosition", "DepthPositionCategory",
+                           "Experience", "ExperienceString", "FantasyPosition", "FirstName", "Height", "InjuryStatus",
+                           "LastName", "LatestNews", "Name", "Number", "PhotoUrl", "PlayerID", "PlayerSeason",
+                           "Position", "PositionCategory", "ShortName", "Status", "Team", "UpcomingGameOpponent",
                            "UpcomingGameWeek", "Weight"}
         for item in response:
             item_keys = set(map(str, item.keys()))
