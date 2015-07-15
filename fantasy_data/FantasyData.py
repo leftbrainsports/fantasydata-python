@@ -1,7 +1,6 @@
 #coding:utf-8
-import json
-import httplib
-import urllib
+import requests
+from six.moves import urllib
 
 
 class FantasyDataError(Exception):
@@ -27,7 +26,9 @@ class FantasyData(object):
         Object contructor. Set key for API requests
         """
         self._api_key = api_key
-        self._get_params = urllib.urlencode({'subscription-key': api_key})
+        # useses six
+        self._get_params = urllib.parse.urlencode({'subscription-key': api_key})
+
         self._headers = {
             # Basic Authorization Sample
             # 'Authorization': 'Basic %s' % base64.encodestring('{username}:{password}'),
@@ -113,26 +114,23 @@ class FantasyData(object):
         `method` str API method url for request. Contains parameters
         `params` dict parameters for method url
         """
+        session = requests.Session()
         try:
-            connection = httplib.HTTPConnection(self._api_address)
-        except:
+            response = session.get("http://" + self._api_address)
+        except requests.exceptions.ConnectionError:
             raise FantasyDataError('Error: Cannot connect to the FantasyData API')
 
-        try:
-            method = method.format(format=self._response_format, **kwargs)
-            request_url = "/standard/{format}/{method}?{get_params}".format(format=self._response_format, method=method,
-                                                                            get_params=self._get_params)
-            connection.request("GET", request_url, "", self._headers)
-            response = connection.getresponse()
+        method = method.format(format=self._response_format, **kwargs)
+        request_url = "/standard/{format}/{method}?{get_params}".format(format=self._response_format, method=method,
+                                                                        get_params=self._get_params)
+        response = session.get("http://" + self._api_address + request_url,
+                               headers=self._headers)
+        result = response.json()
 
-            result = json.loads(response.read())
+        if isinstance(result, dict) and response.status_code:
+            if response.status_code == 401:
+                raise FantasyDataError('Error: Invalid API key')
+            else:
+                raise FantasyDataError('Error: Failed to get response')
 
-            if isinstance(result, dict) and "statusCode" in result:
-                if (result['statusCode']) == 401:
-                    raise FantasyDataError('Error: Invalid API key')
-                else:
-                    raise FantasyDataError('Error: Failed to get response')
-
-            return result
-        finally:
-            connection.close()
+        return result

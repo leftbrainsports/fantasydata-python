@@ -12,3 +12,7 @@ To run tests, set an environment variable named FANTASYDATA_API_KEY like this:
 Then run the tests with:
 
 ```python setup.py test```
+
+or for python 3:
+
+```python3 setup.py test```
