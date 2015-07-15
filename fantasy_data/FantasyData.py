@@ -7,13 +7,14 @@ import urllib
 class FantasyDataError(Exception):
     def __init__(self, errorstr):
         self.errorstr = errorstr
+
     def __str__(self):
         return repr(self.errorstr)
 
 
 class FantasyData(object):
     """
-    Class provide Fantasy Data API calls 
+    Class provide Fantasy Data API calls
     """
     _api_address = "api.nfldata.apiphany.com"  # API hostname
     _api_key = None  # api key for requests
@@ -28,10 +29,10 @@ class FantasyData(object):
         self._api_key = api_key
         self._get_params = urllib.urlencode({'subscription-key': api_key})
         self._headers = {
-                        # Basic Authorization Sample 
-                        # 'Authorization': 'Basic %s' % base64.encodestring('{username}:{password}'),
-                        }
-    
+            # Basic Authorization Sample
+            # 'Authorization': 'Basic %s' % base64.encodestring('{username}:{password}'),
+        }
+
     def get_upcoming_season(self):
         """
         Year of the current NFL season, if we are in the mid-season.
@@ -128,4 +129,3 @@ class FantasyData(object):
             return result
         finally:
             connection.close()
-
