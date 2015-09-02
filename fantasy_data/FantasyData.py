@@ -122,8 +122,8 @@ class FantasyData(object):
             raise FantasyDataError('Error: Cannot connect to the FantasyData API')
 
         method = method.format(format=self._response_format, **kwargs)
-        request_url = "/standard/{format}/{method}?{get_params}".format(format=self._response_format, method=method,
-                                                                        get_params=self._get_params)
+        request_url = "/nfl/v2/{format}/{method}?{get_params}".format(format=self._response_format, method=method,
+                                                                      get_params=self._get_params)
         response = session.get(self._api_schema + self._api_address + request_url,
                                headers=self._headers)
         result = response.json()
