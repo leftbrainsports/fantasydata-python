@@ -157,7 +157,7 @@ class TestFantasyData:
             assert isinstance(item["Team"], six.text_type), "unexpected type of key 'Team'"
             assert isinstance(item["UpcomingGameOpponent"], six.text_type), "unexpected type of key 'UpcomingGameOpponent'"
             assert isinstance(item["UpcomingGameWeek"], int), "unexpected type of key 'UpcomingGameWeek'"
-            assert item["Weight"] is None or isinstance(item["Weight"], six.text_type), "unexpected type of key 'Weight'"
+            assert item["Weight"] is None or isinstance(item["Weight"], int), "unexpected type of key 'Weight'"
 
     def test_get_players_game_stats_for_season_for_week(self, api_key, season, week):
         """
@@ -238,7 +238,7 @@ class TestFantasyData:
             assert isinstance(item["ShortName"], six.text_type), "unexpected type of key 'ShortName'"
             assert isinstance(item["Status"], six.text_type), "unexpected type of key 'Status'"
             assert isinstance(item["Team"], six.text_type), "unexpected type of key 'Team'"
-            assert item["Weight"] is None or isinstance(item["Weight"], (int, six.text_type)), "unexpected type of key 'Weight'"  # why str - don`t know
+            assert item["Weight"] is None or isinstance(item["Weight"], int), "unexpected type of key 'Weight'"
 
     def test_get_teams_active(self, api_key):
         """
