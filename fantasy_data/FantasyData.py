@@ -109,6 +109,19 @@ class FantasyData(object):
         result = self._method_call("Teams")
         return result
 
+    def get_schedules(self, season):
+        """
+        Schedules for a specified season.
+        `season` int
+        """
+        try:
+            season = int(season)
+        except ValueError:
+            raise FantasyDataError('Error: Invalid method parameters')
+
+        result = self._method_call("Schedules/{season}", season=season)
+        return result
+
     def _method_call(self, method, **kwargs):
         """
         Call API method. Generate request. Parse response. Process errors
