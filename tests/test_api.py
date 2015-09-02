@@ -1,6 +1,6 @@
 #coding:utf-8
+import datetime
 import os
-import re
 import six
 
 import pytest
@@ -42,8 +42,6 @@ def week():
 class TestFantasyData:
     """
     """
-    date_regex = re.compile(r"/Date[(](\d{,10})000[+-]\d{4}[)]/")
-
     def test_get_upcoming_season_api_is_unavailable(self):
         """
         API is unavailable
@@ -255,7 +253,6 @@ class TestFantasyData:
 
     def _check_date(self, value, error_msg):
         """
-        Check date value. Parse timestamp or throw assert exception
+        Check date value. Parse datetime or throw assert exception
         """
-        m = self.date_regex.match(value)
-        assert m is not None and m.group(1), error_msg
+        datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
