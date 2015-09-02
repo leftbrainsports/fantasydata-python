@@ -33,6 +33,10 @@ setup(
     url='https://github.com/ffcalculator/fantasydata-python',
     packages=['fantasy_data'],
     keywords=['fantasy', 'sports', 'football'],
+    install_requires=[
+        "requests",
+        "six",
+    ],
     tests_require=['pytest'],
     cmdclass = {'test': PyTest},
     download_url='https://github.com/ffcalculator/fantasydata-python/archive/v1.0.3.tar.gz'
