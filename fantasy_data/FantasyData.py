@@ -16,7 +16,7 @@ class FantasyData(object):
     Class provide Fantasy Data API calls
     """
     _api_schema = "http://"
-    _api_address = "api.nfldata.apiphany.com"  # API hostname
+    _api_address = "api.fantasydata.net"  # API hostname
     _api_key = None  # api key for requests
     _get_params = None  # request GET params with API key
     _headers = None  # request additional headers
