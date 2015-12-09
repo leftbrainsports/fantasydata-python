@@ -23,6 +23,13 @@ def season():
     return 2016
 
 
+@pytest.fixture(scope="module")
+def game_date():
+    """
+    """
+    return "2015-12-05"
+
+
 class TestFantasyData:
     """
     """
@@ -86,6 +93,45 @@ class TestFantasyData:
             assert item["OverUnder"] is None or isinstance(item["OverUnder"], (float, int)), "unexpected type of key 'OverUnder'"
             assert item["PointSpread"] is None or isinstance(item["PointSpread"], (float, int)), "unexpected type of key 'PointSpread'"
             assert isinstance(item["Season"], int), "unexpected type of key 'Season'"
+
+    def test_get_games_by_date(self, api_key, game_date):
+        response = FantasyDataNBA(api_key).get_games_by_date(game_date)
+
+        assert isinstance(response, list), "response not list"
+        assert len(response), "response empty list"
+
+        assert isinstance(response[0]["StadiumID"], int), "unexpected type of key 'StadiumID'"
+
+    def test_get_player_game_stats_by_date(self, api_key, game_date):
+        response = FantasyDataNBA(api_key).get_players_game_stats_by_date(game_date)
+
+        assert isinstance(response, list), "response not list"
+        assert len(response), "response empty list"
+
+        assert isinstance(response[0]["GameID"], int), "unexpected type of key 'GameID'"
+        assert isinstance(response[0]["PlayerID"], int), "unexpected type of key 'PlayerID'"
+        assert isinstance(response[0]["Name"], six.text_type), "unexpected type of key 'name'"
+
+    def test_get_team_game_stats_by_date(self, api_key, game_date):
+        response = FantasyDataNBA(api_key).get_team_game_stats_by_date(game_date)
+
+        assert isinstance(response, list), "response not list"
+        assert len(response), "response empty list"
+
+        assert isinstance(response[0]["GameID"], int), "unexpected type of key 'GameID'"
+        assert isinstance(response[0]["TeamID"], int), "unexpected type of key 'TeamID'"
+        assert isinstance(response[0]["Name"], six.text_type), "unexpected type of key 'name'"
+
+    def test_get_standings(self, api_key, season):
+        response = FantasyDataNBA(api_key).get_standings(season)
+
+        assert isinstance(response, list), "response not list"
+        assert len(response), "response empty list"
+
+        assert isinstance(response[0]["TeamID"], int), "unexpected type of key 'TeamID'"
+        assert isinstance(response[0]["Name"], six.text_type), "unexpected type of key 'name'"
+        assert isinstance(response[0]["Wins"], int), "unexpected type of key 'Wins'"
+        assert isinstance(response[0]["Losses"], int), "unexpected type of key 'Losses'"
 
     def _check_date(self, value, error_msg):
         """

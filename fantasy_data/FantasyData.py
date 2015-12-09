@@ -176,3 +176,31 @@ class FantasyDataNBA(FantasyDataBase):
 
         result = self._method_call("Games/{season}", season=season)
         return result
+
+    def get_games_by_date(self, game_date):
+        """
+        Game schedule for a specified day.
+        """
+        result = self._method_call("GamesByDate/{game_date}", game_date=game_date)
+        return result
+
+    def get_players_game_stats_by_date(self, game_date):
+        """
+        Game stats for each player at a specified date.
+        """
+        result = self._method_call("PlayerGameStatsByDate/{game_date}", game_date=game_date)
+        return result
+
+    def get_team_game_stats_by_date(self, game_date):
+        """
+        Game stats for each team at a specified date.
+        """
+        result = self._method_call("TeamGameStatsByDate/{game_date}", game_date=game_date)
+        return result
+
+    def get_standings(self, season):
+        """
+        Get standings for season
+        """
+        result = self._method_call("Standings/{season}", season=season)
+        return result
