@@ -11,9 +11,9 @@ class FantasyDataError(Exception):
         return repr(self.errorstr)
 
 
-class FantasyData(object):
+class FantasyDataBase(object):
     """
-    Class provide Fantasy Data API calls
+    Base class for all Fantasy Data APIs
     """
     _api_schema = "http://"
     _api_address = "api.fantasydata.net"  # API hostname
@@ -34,6 +34,43 @@ class FantasyData(object):
             # Basic Authorization Sample
             # 'Authorization': 'Basic %s' % base64.encodestring('{username}:{password}'),
         }
+
+    def _method_call(self, method, **kwargs):
+        """
+        Call API method. Generate request. Parse response. Process errors
+        `method` str API method url for request. Contains parameters
+        `params` dict parameters for method url
+        """
+        session = requests.Session()
+        try:
+            response = session.get("http://" + self._api_address)
+        except requests.exceptions.ConnectionError:
+            raise FantasyDataError('Error: Cannot connect to the FantasyData API')
+
+        method = method.format(format=self._response_format, **kwargs)
+        request_url = "/{game_type}/v2/{format}/{method}?{get_params}".format(
+            game_type=self.game_type,
+            format=self._response_format,
+            method=method,
+            get_params=self._get_params)
+        response = session.get(self._api_schema + self._api_address + request_url,
+                               headers=self._headers)
+        result = response.json()
+
+        if isinstance(result, dict) and response.status_code:
+            if response.status_code == 401:
+                raise FantasyDataError('Error: Invalid API key')
+            else:
+                raise FantasyDataError('Error: Failed to get response')
+
+        return result
+
+
+class FantasyData(FantasyDataBase):
+    """
+    Class provide Fantasy Data API calls (NFL)
+    """
+    game_type = 'nfl'
 
     def get_upcoming_season(self):
         """
@@ -107,31 +144,4 @@ class FantasyData(object):
         Gets all active teams.
         """
         result = self._method_call("Teams")
-        return result
-
-    def _method_call(self, method, **kwargs):
-        """
-        Call API method. Generate request. Parse response. Process errors
-        `method` str API method url for request. Contains parameters
-        `params` dict parameters for method url
-        """
-        session = requests.Session()
-        try:
-            response = session.get("http://" + self._api_address)
-        except requests.exceptions.ConnectionError:
-            raise FantasyDataError('Error: Cannot connect to the FantasyData API')
-
-        method = method.format(format=self._response_format, **kwargs)
-        request_url = "/nfl/v2/{format}/{method}?{get_params}".format(format=self._response_format, method=method,
-                                                                      get_params=self._get_params)
-        response = session.get(self._api_schema + self._api_address + request_url,
-                               headers=self._headers)
-        result = response.json()
-
-        if isinstance(result, dict) and response.status_code:
-            if response.status_code == 401:
-                raise FantasyDataError('Error: Invalid API key')
-            else:
-                raise FantasyDataError('Error: Failed to get response')
-
         return result
