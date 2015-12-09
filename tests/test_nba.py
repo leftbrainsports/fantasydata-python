@@ -133,6 +133,17 @@ class TestFantasyData:
         assert isinstance(response[0]["Wins"], int), "unexpected type of key 'Wins'"
         assert isinstance(response[0]["Losses"], int), "unexpected type of key 'Losses'"
 
+    def test_get_teams_active(self, api_key):
+        """
+        API call get_current_week
+        """
+        response = FantasyDataNBA(api_key).get_teams_active()
+
+        assert isinstance(response, list), "response not list"
+        assert len(response), "response empty list"
+
+        assert isinstance(response[0]["City"], six.text_type), "unexpected type of key 'City'"
+
     def _check_date(self, value, error_msg):
         """
         Check date value. Parse datetime or throw assert exception

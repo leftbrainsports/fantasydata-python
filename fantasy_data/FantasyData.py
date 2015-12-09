@@ -204,3 +204,10 @@ class FantasyDataNBA(FantasyDataBase):
         """
         result = self._method_call("Standings/{season}", season=season)
         return result
+
+    def get_teams_active(self):
+        """
+        Gets all active teams.
+        """
+        result = self._method_call("Teams")
+        return result
