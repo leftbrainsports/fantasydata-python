@@ -60,6 +60,9 @@ class FantasyDataBase(object):
         if isinstance(result, dict) and response.status_code:
             if response.status_code == 401:
                 raise FantasyDataError('Error: Invalid API key')
+            elif response.status_code == 200:
+                # for NBA everything is ok here.
+                pass
             else:
                 raise FantasyDataError('Error: Failed to get response')
 
@@ -145,3 +148,19 @@ class FantasyData(FantasyDataBase):
         """
         result = self._method_call("Teams")
         return result
+
+
+class FantasyDataNBA(FantasyDataBase):
+    """
+    Class provide Fantasy Data API calls (NFL)
+    """
+    game_type = 'nba'
+
+    def get_current_season(self):
+        """
+        Year of the current NBA season.
+        The year is the year of the playoffs.
+        I.e. result=2016 is 2015/2016
+        """
+        result = self._method_call("CurrentSeason")
+        return int(result.get('Season'))
