@@ -164,3 +164,15 @@ class FantasyDataNBA(FantasyDataBase):
         """
         result = self._method_call("CurrentSeason")
         return int(result.get('Season'))
+
+    def get_games_by_season(self, season):
+        """
+        Game schedule for a specified season.
+        """
+        try:
+            season = int(season)
+        except ValueError:
+            raise FantasyDataError('Error: Invalid method parameters')
+
+        result = self._method_call("Games/{season}", season=season)
+        return result
