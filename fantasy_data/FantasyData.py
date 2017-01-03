@@ -149,6 +149,13 @@ class FantasyData(FantasyDataBase):
         result = self._method_call("Teams")
         return result
 
+    def get_player(self, player_id):
+        """
+        Player profile information for one specific player.
+        `player_id` int
+        """
+        result = self._method_call("Player/{player_id}", player_id=player_id)
+        return result
 
 class FantasyDataNBA(FantasyDataBase):
     """
