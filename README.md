@@ -1,9 +1,18 @@
 # fantasydata-python
 A Python wrapper around the Fantasy Data API.
 
-Not all of the FantasyData API is implemented yet. Pull requests welcome!
+## Example Usage
+```
+from fantasy_data.FantasyData import FantasyData
+fantasy_data = FantasyData("my_api_key")
+player = fantasy_data.get_player(732)
+print player
+{u'InjuryStartDate': None, u'FirstName': u'Matt', u'PlayerID': 732, u'LastName': u'Ryan',  ....}
+
+```
 
 ## Supported Methods
+Not all of the FantasyData API is implemented yet. Pull requests welcome!
 
 ### NFL
 * `get_upcoming_season()`
