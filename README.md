@@ -26,7 +26,7 @@ Not all of the FantasyData API is implemented yet. Pull requests welcome!
 * `get_projected_player_game_stats_by_player(season, week, player_id)`
 * `get_projected_player_game_stats_by_team(season, week, team)`
 * `get_projected_player_game_stats_by_week(season, week)`
-
+* `get_projected_fantasy_defense_game_stats_by_week(season, week)`
 
 ### NBA
 * `get_current_season()`
