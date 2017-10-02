@@ -178,6 +178,13 @@ class FantasyData(FantasyDataBase):
         result = self._method_call("PlayerGameProjectionStatsByWeek/{season}/{week}", season=season, week=week)
         return result
 
+    def get_projected_fantasy_defense_game_stats_by_week(self, season, week):
+        """
+        Projected Fantasy Defense Game Stats by Week
+        """
+        result = self._method_call("FantasyDefenseProjectionsByGame/{season}/{week}", season=season, week=week)
+        return result
+
 class FantasyDataNBA(FantasyDataBase):
     """
     Class provide Fantasy Data API calls (NFL)
