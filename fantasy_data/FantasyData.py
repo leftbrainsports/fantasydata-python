@@ -15,7 +15,7 @@ class FantasyDataBase(object):
     """
     Base class for all Fantasy Data APIs
     """
-    _api_schema = "http://"
+    _api_schema = "https://"
     _api_address = "api.fantasydata.net"  # API hostname
     _api_key = None  # api key for requests
     _get_params = None  # request GET params with API key
@@ -35,7 +35,7 @@ class FantasyDataBase(object):
             # 'Authorization': 'Basic %s' % base64.encodestring('{username}:{password}'),
         }
 
-    def _method_call(self, method, **kwargs):
+    def _method_call(self, method, category, **kwargs):
         """
         Call API method. Generate request. Parse response. Process errors
         `method` str API method url for request. Contains parameters
@@ -48,8 +48,9 @@ class FantasyDataBase(object):
             raise FantasyDataError('Error: Cannot connect to the FantasyData API')
 
         method = method.format(format=self._response_format, **kwargs)
-        request_url = "/{game_type}/v2/{format}/{method}?{get_params}".format(
+        request_url = "/v3/{game_type}/{category}/{format}/{method}?{get_params}".format(
             game_type=self.game_type,
+            category=category,
             format=self._response_format,
             method=method,
             get_params=self._get_params)
@@ -82,7 +83,7 @@ class FantasyData(FantasyDataBase):
         This value changes immediately after the Super Bowl.
         The earliest season for Fantasy data is 2001. The earliest season for Team data is 1985.
         """
-        result = self._method_call("UpcomingSeason")
+        result = self._method_call("UpcomingSeason", "stats")
         return int(result)
 
     def get_schedules_for_season(self, season, season_type="REG"):
@@ -97,13 +98,13 @@ class FantasyData(FantasyDataBase):
             raise FantasyDataError('Error: Invalid method parameters')
 
         season_param = "{0}{1}".format(season, season_type)
-        result = self._method_call("Schedules/{season}", season=season_param)
+        result = self._method_call("Schedules/{season}", "stats", season=season_param)
         return result
 
     def get_free_agents(self):
         """
         """
-        result = self._method_call("FreeAgents")
+        result = self._method_call("FreeAgents", "stats")
         return result
 
     def get_current_week(self):
@@ -113,14 +114,14 @@ class FantasyData(FantasyDataBase):
         Week number is an integer between 1 and 21 or the word current.
         Weeks 1 through 17 are regular season weeks. Weeks 18 through 21 are post-season weeks.
         """
-        result = self._method_call("CurrentWeek")
+        result = self._method_call("CurrentWeek", "stats")
         return int(result)
 
     def get_team_roster_and_depth_charts(self, team_name):
         """
         `team_name` str Team short name
         """
-        result = self._method_call("Players/{team}", team=team_name)
+        result = self._method_call("Players/{team}", "stats", team=team_name)
         return result
 
     def get_players_game_stats_for_season_for_week(self, season, week, season_type="REG"):
@@ -139,14 +140,14 @@ class FantasyData(FantasyDataBase):
             raise FantasyDataError('Error: Invalid method parameters')
 
         season_param = "{0}{1}".format(season, season_type)
-        result = self._method_call("PlayerGameStatsByWeek/{season}/{week}", season=season_param, week=week)
+        result = self._method_call("PlayerGameStatsByWeek/{season}/{week}", "stats", season=season_param, week=week)
         return result
 
     def get_teams_active(self):
         """
         Gets all active teams.
         """
-        result = self._method_call("Teams")
+        result = self._method_call("Teams", "stats")
         return result
 
     def get_player(self, player_id):
@@ -154,35 +155,35 @@ class FantasyData(FantasyDataBase):
         Player profile information for one specific player.
         `player_id` int
         """
-        result = self._method_call("Player/{player_id}", player_id=player_id)
+        result = self._method_call("Player/{player_id}", "stats", player_id=player_id)
         return result
 
     def get_projected_player_game_stats_by_player(self, season, week, player_id):
         """
         Projected Player Game Stats by Player
         """
-        result = self._method_call("PlayerGameProjectionStatsByPlayerID/{season}/{week}/{player_id}", season=season, week=week, player_id=player_id)
+        result = self._method_call("PlayerGameProjectionStatsByPlayerID/{season}/{week}/{player_id}", "projections", season=season, week=week, player_id=player_id)
         return result
 
     def get_projected_player_game_stats_by_team(self, season, week, team_id):
         """
         Projected Player Game Stats by Team
         """
-        result = self._method_call("PlayerGameProjectionStatsByTeam/{season}/{week}/{team_id}", season=season, week=week, team_id=team_id)
+        result = self._method_call("PlayerGameProjectionStatsByTeam/{season}/{week}/{team_id}", "projections", season=season, week=week, team_id=team_id)
         return result
 
     def get_projected_player_game_stats_by_week(self, season, week):
         """
         Projected Player Game Stats by Week
         """
-        result = self._method_call("PlayerGameProjectionStatsByWeek/{season}/{week}", season=season, week=week)
+        result = self._method_call("PlayerGameProjectionStatsByWeek/{season}/{week}", "projections", season=season, week=week)
         return result
 
     def get_projected_fantasy_defense_game_stats_by_week(self, season, week):
         """
         Projected Fantasy Defense Game Stats by Week
         """
-        result = self._method_call("FantasyDefenseProjectionsByGame/{season}/{week}", season=season, week=week)
+        result = self._method_call("FantasyDefenseProjectionsByGame/{season}/{week}", "projections", season=season, week=week)
         return result
 
 class FantasyDataNBA(FantasyDataBase):
@@ -197,7 +198,7 @@ class FantasyDataNBA(FantasyDataBase):
         The year is the year of the playoffs.
         I.e. result=2016 is 2015/2016
         """
-        result = self._method_call("CurrentSeason")
+        result = self._method_call("CurrentSeason", "stats")
         return int(result.get('Season'))
 
     def get_games_by_season(self, season):
@@ -209,40 +210,40 @@ class FantasyDataNBA(FantasyDataBase):
         except ValueError:
             raise FantasyDataError('Error: Invalid method parameters')
 
-        result = self._method_call("Games/{season}", season=season)
+        result = self._method_call("Games/{season}", "stats", season=season)
         return result
 
     def get_games_by_date(self, game_date):
         """
         Game schedule for a specified day.
         """
-        result = self._method_call("GamesByDate/{game_date}", game_date=game_date)
+        result = self._method_call("GamesByDate/{game_date}", "scores", game_date=game_date)
         return result
 
     def get_players_game_stats_by_date(self, game_date):
         """
         Game stats for each player at a specified date.
         """
-        result = self._method_call("PlayerGameStatsByDate/{game_date}", game_date=game_date)
+        result = self._method_call("PlayerGameStatsByDate/{game_date}", "stats", game_date=game_date)
         return result
 
     def get_team_game_stats_by_date(self, game_date):
         """
         Game stats for each team at a specified date.
         """
-        result = self._method_call("TeamGameStatsByDate/{game_date}", game_date=game_date)
+        result = self._method_call("TeamGameStatsByDate/{game_date}", "stats", game_date=game_date)
         return result
 
     def get_standings(self, season):
         """
         Get standings for season
         """
-        result = self._method_call("Standings/{season}", season=season)
+        result = self._method_call("Standings/{season}", "stats", season=season)
         return result
 
     def get_teams_active(self):
         """
         Gets all active teams.
         """
-        result = self._method_call("Teams")
+        result = self._method_call("Teams", "stats")
         return result
