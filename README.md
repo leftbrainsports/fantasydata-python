@@ -1,6 +1,8 @@
 # fantasydata-python
 A Python wrapper around the Fantasy Data API.
 
+Currently support V3 of the FantasyData API.
+
 ## Example Usage
 ```
 from fantasy_data.FantasyData import FantasyData

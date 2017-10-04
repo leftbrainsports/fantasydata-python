@@ -26,7 +26,7 @@ class PyTest(TestCommand):
 
 setup(
     name='fantasy_data',
-    version='1.2.1',
+    version='2.0.0',
     description='FantasyData Python',
     author='Fantasy Football Calculator',
     author_email='support@fantasyfootballcalculator.com',
@@ -39,5 +39,5 @@ setup(
     ],
     tests_require=['pytest'],
     cmdclass = {'test': PyTest},
-    download_url='https://github.com/ffcalculator/fantasydata-python/archive/v1.2.1.tar.gz'
+    download_url='https://github.com/ffcalculator/fantasydata-python/archive/v2.0.0.tar.gz'
 )
