@@ -186,6 +186,49 @@ class FantasyData(FantasyDataBase):
         result = self._method_call("FantasyDefenseProjectionsByGame/{season}/{week}", "projections", season=season, week=week)
         return result
 
+    def get_rotoballer_premium_news(self):
+        """
+        RotoBaller Premium News
+        """
+        result = self._method_call("RotoBallerPremiumNews", "news-rotoballer")
+        return result
+
+    def get_rotoballer_premium_news_by_date(self, date):
+        """
+        RotoBaller Premium News By Date
+        Date format: 2017-JUL-31
+        """
+        result = self._method_call("RotoBallerPremiumNewsByDate/{date}", "news-rotoballer", date=date)
+        return result
+
+    def get_rotoballer_premium_news_by_player(self, player_id):
+        """
+        RotoBaller Premium News By Player ID
+        """
+        result = self._method_call("RotoBallerPremiumNewsByPlayerID/{player_id}", "news-rotoballer", player_id=player_id)
+        return result
+
+    def get_rotoballer_premium_news_by_team(self, team_id):
+        """
+        RotoBaller Premium News By Team ID
+        """
+        result = self._method_call("RotoBallerPremiumNewsByTeam/{team_id}", "news-rotoballer", team_id=team_id)
+        return result
+
+    def get_injuries(self, season, week):
+        """
+        Injuries by week
+        """
+        result = self._method_call("Injuries/{season}/{week}", "stats", season=season, week=week)
+        return result
+
+    def get_injuries_by_team(self, season, week, team_id):
+        """
+        Injuries by week and team
+        """
+        result = self._method_call("Injuries/{season}/{week}/{team_id}", "stats", season=season, week=week, team_id=team_id)
+        return result
+
 class FantasyDataNBA(FantasyDataBase):
     """
     Class provide Fantasy Data API calls (NFL)
