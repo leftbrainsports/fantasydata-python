@@ -35,6 +35,7 @@ Not all of the FantasyData API is implemented yet. Pull requests welcome!
 * `get_rotoballer_premium_news_by_team(team)`
 * `get_injuries(season, week)`
 * `get_injuries_by_team(season, week, team)`
+* `get_box_score_by_team(season, week, team)`
 
 ### NBA
 * `get_current_season()`

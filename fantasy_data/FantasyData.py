@@ -229,6 +229,13 @@ class FantasyData(FantasyDataBase):
         result = self._method_call("Injuries/{season}/{week}/{team_id}", "stats", season=season, week=week, team_id=team_id)
         return result
 
+    def get_box_score_by_team(self, season, week, team_id):
+        """
+        Box score by week and team
+        """
+        result = self._method_call("BoxScoreV3/{season}/{week}/{team_id}", "stats", season=season, week=week, team_id=team_id)
+        return result
+
 class FantasyDataNBA(FantasyDataBase):
     """
     Class provide Fantasy Data API calls (NFL)
