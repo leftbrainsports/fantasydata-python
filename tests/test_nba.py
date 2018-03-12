@@ -134,15 +134,22 @@ class TestFantasyData:
         assert isinstance(response[0]["Losses"], int), "unexpected type of key 'Losses'"
 
     def test_get_teams_active(self, api_key):
-        """
-        API call get_current_week
-        """
         response = FantasyDataNBA(api_key).get_teams_active()
 
         assert isinstance(response, list), "response not list"
         assert len(response), "response empty list"
 
         assert isinstance(response[0]["City"], six.text_type), "unexpected type of key 'City'"
+
+    def test_get_stadiums(self, api_key):
+        response = FantasyDataNBA(api_key).get_stadiums()
+
+        assert isinstance(response, list), "response not list"
+        assert len(response), "response empty list"
+
+        assert isinstance(response[0]["City"], six.text_type), "unexpected type of key 'City'"
+        assert isinstance(response[0]["StadiumID"], int), "unexpected type of key 'StadiumID'"
+        assert isinstance(response[0]["Capacity"], int), "unexpected type of key 'Capacity'"
 
     def _check_date(self, value, error_msg):
         """

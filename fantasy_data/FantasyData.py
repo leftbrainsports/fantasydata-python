@@ -297,3 +297,10 @@ class FantasyDataNBA(FantasyDataBase):
         """
         result = self._method_call("Teams", "stats")
         return result
+
+    def get_stadiums(self):
+        """
+        Get all stadiums.
+        """
+        result = self._method_call("Stadiums")
+        return result
