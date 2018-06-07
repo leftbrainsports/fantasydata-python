@@ -236,6 +236,13 @@ class FantasyData(FantasyDataBase):
         result = self._method_call("BoxScoreV3/{season}/{week}/{team_id}", "stats", season=season, week=week, team_id=team_id)
         return result
 
+    def get_bye_weeks(self, season):
+        """
+        Bye weeks
+        """
+        result = self._method_call("Byes/{season}", "stats", season=season)
+        return result
+
 class FantasyDataNBA(FantasyDataBase):
     """
     Class provide Fantasy Data API calls (NFL)
