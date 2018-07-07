@@ -30,6 +30,7 @@ Not all of the FantasyData API is implemented yet. Pull requests welcome!
 * `get_projected_player_game_stats_by_week(season, week)`
 * `get_projected_fantasy_defense_game_stats_by_week(season, week)`
 * `get_player_season_projected_stats(season)`
+* `get_fantasy_defense_projections_by_season(season)`
 * `get_rotoballer_premium_news()`
 * `get_rotoballer_premium_news_by_date(date)`
 * `get_rotoballer_premium_news_by_player(player_id)`
