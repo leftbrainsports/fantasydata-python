@@ -186,6 +186,13 @@ class FantasyData(FantasyDataBase):
         result = self._method_call("FantasyDefenseProjectionsByGame/{season}/{week}", "projections", season=season, week=week)
         return result
 
+    def get_player_season_projected_stats(self, season):
+        """
+        Projected Stats By Player By Season
+        """
+        result = self._method_call("PlayerSeasonProjectionStats/{season}", "projections", season=season)
+        return result
+    
     def get_rotoballer_premium_news(self):
         """
         RotoBaller Premium News
